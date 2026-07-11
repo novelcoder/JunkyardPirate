@@ -45,12 +45,47 @@ function renderBooksError() {
   container.innerHTML = '<p style="color:#8a8477;">Unable to load books right now. Please try again later.</p>';
 }
 
+async function subscribeEmail(email) {
+  const res = await fetch(`${APPWRITE_ENDPOINT}/functions/subscribe/executions`, {
+    method: 'POST',
+    headers: {
+      'X-Appwrite-Project': APPWRITE_PROJECT_ID,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      body: JSON.stringify({ email }),
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+    }),
+  });
+  if (!res.ok) throw new Error(`Execution request failed (${res.status})`);
+  const execution = await res.json();
+  const result = execution.responseBody ? JSON.parse(execution.responseBody) : null;
+  if (!result || !result.ok) throw new Error('Subscription failed');
+}
+
 function initNewsletterForm() {
   const form = document.getElementById('newsletter-form');
+  const emailInput = document.getElementById('newsletter-email');
   const thanks = document.getElementById('newsletter-thanks');
-  form.addEventListener('submit', (e) => {
+  const errorEl = document.getElementById('newsletter-error');
+  const submitButton = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    thanks.style.display = 'block';
+    thanks.style.display = 'none';
+    errorEl.style.display = 'none';
+    submitButton.disabled = true;
+    try {
+      await subscribeEmail(emailInput.value);
+      thanks.style.display = 'block';
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      errorEl.style.display = 'block';
+    } finally {
+      submitButton.disabled = false;
+    }
   });
 }
 

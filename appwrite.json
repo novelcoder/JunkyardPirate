@@ -1,0 +1,23 @@
+{
+    "projectId": "6a0b4638002a71c2b8ec",
+    "projectName": "JunkyardPirate",
+    "functions": [
+        {
+            "$id": "subscribe",
+            "name": "subscribe",
+            "runtime": "node-22",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/subscribe"
+        }
+    ]
+}
