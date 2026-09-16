@@ -1,5 +1,7 @@
+import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
 import { getBooks, type BookDoc } from "@/lib/appwrite";
+import { bookSlug } from "@/lib/slug";
 
 const HERO_COVER_URL =
   "https://sfo.cloud.appwrite.io/v1/storage/buckets/6a50ff920031640f71bd/files/6a510087040ed2c6f583/view?project=6a0b4638002a71c2b8ec";
@@ -15,7 +17,11 @@ function BookRow({ book }: { book: BookDoc }) {
         <div>
           <span className="book-eyebrow">BOOK {book.series_number}</span>
         </div>
-        <h3 className="book-title">{book.title}</h3>
+        <h3 className="book-title">
+          <Link href={`/books/${bookSlug(book)}/`} className="book-title-link">
+            {book.title}
+          </Link>
+        </h3>
         <p className="book-tagline">{book.tagline}</p>
         <p className="book-blurb">{book.blurb}</p>
         <div className="book-actions">
